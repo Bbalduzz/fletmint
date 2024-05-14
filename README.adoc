@@ -2,7 +2,7 @@
 <h1 align="center">
   <img src="https://github.com/Bbalduzz/fletmint/assets/81587335/c9ee557f-4362-432e-9d02-47995bc63585" alt="fletmint logo" width="200"/>
   </br>
-  Flet Mint
+  <a href="https://pypi.org/project/fletmint/"><img src="https://static.pepy.tech/badge/fletmint"/></a>
 </h1>
 
 <h4 align="center">A sharp and modern components library for Flet</h4>
