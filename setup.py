@@ -1,11 +1,12 @@
 from setuptools import setup, find_packages
 from os import path
 
-description = path.join(path.dirname(__file__), "description.md")
+with open(path.join(path.dirname(__file__), "description.md"), "r") as file:
+    description = file.read()
 
 setup(
     name="fletmint",
-    version="0.1.4",
+    version="0.1.4.1",
     author="Edoardo Balducci",
     author_email="edoardoba2004@gmail.com",
     description="A sharp and modern components library for Flet",

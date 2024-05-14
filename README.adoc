@@ -20,8 +20,19 @@
 link:https://www.patreon.com/edoardobalducci[ image:https://pbs.twimg.com/media/DC4gjLRUMAAyQ92.jpg[Donate, align="center", width=180]]
 
 = Installation
+- from link:https://pypi.org/project/fletmint/[PyPI]
++
 ```
 pip install fletmint
+```
+- from source
++
+```
+git clone https://github.com/Bbalduzz/fletmint.git
+
+cd fletmint
+
+py311 setup.py install
 ```
 
 = Documentation
@@ -732,6 +743,10 @@ image:https://github.com/Bbalduzz/fletmint/assets/81587335/d6dedf70-d79f-45a0-91
 
 
 = Support
+_Maintaining_ and _updating_ this kit, along with _adding new components_, is a *time-consuming* and often *challenging* process. However, I believe it's important to make this resource available to everyone because it's the right thing to do. If you find value in this components library and would like to *_support its development_*, please consider contributing in any way you can.
+
+Thank you for your support, even if it's just leaving a star on the project! Your encouragement means a lot.
+
 link:https://www.patreon.com/edoardobalducci[ image:https://pbs.twimg.com/media/DC4gjLRUMAAyQ92.jpg[Donate, align="center", width=180]]
 
 link:https://liberapay.com/balduzz/donate[image:https://liberapay.com/assets/widgets/donate.svg[Donate, align="center"]]
