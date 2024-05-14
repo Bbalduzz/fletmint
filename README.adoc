@@ -1,0 +1,741 @@
+++++
+<h1 align="center">
+  <img src="https://github.com/Bbalduzz/fletmint/assets/81587335/c9ee557f-4362-432e-9d02-47995bc63585" alt="fletmint logo" width="200"/>
+  </br>
+  Flet Mint
+</h1>
+
+<h4 align="center">A sharp and modern components library for Flet</h4>
+
+<p align="center">
+  <a href="#documentation">Documentation</a> •
+  <a href="#support">Support Me</a>
+</p>
+
+<kbd>
+<img src="https://github.com/Bbalduzz/fletmint/assets/81587335/16351382-8148-4421-b9a3-599003caeda9" alt="fletmint logo"/>
+</kbd>
+++++
+
+link:https://www.patreon.com/edoardobalducci[ image:https://pbs.twimg.com/media/DC4gjLRUMAAyQ92.jpg[Donate, align="center", width=180]]
+
+= Installation
+```
+pip install fletmint
+```
+
+= Documentation
+
+TIP: every component inherits its parent's class methods
+
+=== `fletmint.*Button*`
+The `Button` component inherits the `flet.TextButton`
+
+===== params
+* `width`: int = width of the button
+* `height`:int = height of the button
+* `disabled`: bool = make the button disabled
+* `label`: str = button's label
+* `icon`: ft.icons = button's icon
+
+===== methods
+* `on_click` = fires when the button is clicked
+
+_example_: 
+[source,python]
+-----------------
+import flet as ft
+from fletmint import *
+
+def main(page: ft.Page):
+    page.theme_mode = ft.ThemeMode.DARK
+    page.bgcolor = "#22242a"
+
+    page.add(
+        ft.Row(
+            [
+                Button(),
+                Button(disabled=True),
+            ]
+        )
+    )
+
+ft.app(target=main)
+-----------------
+image:https://github.com/Bbalduzz/fletmint/assets/81587335/59810910-65bd-43d8-8980-f54c2508a881[alt="not bad.",width=400]
+
+
+=== `fletmint.*TextInput*`
+The `TextInput` component inherits the `flet.Container`
+
+===== params
+* `prefix`: Any
+* `suffix`: Any
+* `on_focus_additional`: Any = set a function to fire when the field is focused
+* `on_blur_additional`: Any = set a function to fire when the field is not focused
+* `theme`: ThemeMode
+
+===== methods
+* every in the TextButton
+
+
+_example_: 
+[source,python]
+-----------------
+import flet as ft
+from fletmint import *
+
+def main(page: ft.Page):
+    page.theme_mode = ft.ThemeMode.DARK
+    page.bgcolor = "#22242a"
+
+    page.add(
+        ft.Row(
+            [
+                TextInput(),
+                TextInput(password=True)
+            ]
+        )
+    )
+
+ft.app(target=main)
+-----------------
+image:https://github.com/Bbalduzz/fletmint/assets/81587335/6788bed5-f79a-45f1-b8fd-5259fdb1575c[alt="not bad.",width=400]
+
+It offers less style modifications, but *enhances* the `flet.TextField` accepting by default a `prefix` and a `suffix`:
+[source,python]
+-----------------
+text_input_with_suffix_and_prefix = TextInput(
+    prefix=ft.Icon(name=ft.icons.SEARCH, color=ft.colors.GREY_200, size=18),
+    suffix=ft.CircleAvatar(
+        foreground_image_src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
+        radius=30,
+    ),
+)
+
+def show_password(e):
+    e.control.parent.parent.controls[0].password ^= True
+    e.control.parent.parent.controls[0].update()
+    e.control.icon = (
+        ft.icons.LOCK_OPEN_ROUNDED
+        if e.control.icon == ft.icons.LOCK_ROUNDED
+        else ft.icons.LOCK_ROUNDED
+    )
+    e.control.update()
+password_input = TextInput(
+    password=True,
+    suffix=ft.IconButton(
+        icon=ft.icons.LOCK_ROUNDED,
+        icon_color="#e3e2e2",
+        icon_size=10,
+        splash_radius=0,
+        on_click=show_password,
+    ),
+)
+-----------------
+
+=== `fletmint.*TagsInput*`
+The `TagsInput` component inherits the `flet.Container`.
+The tags are `fletmint.Badge`.
+
+===== params
+* `max_width`: int
+* `max_tags`: int
+* `theme`: ThemeMode
+
+===== methods
+
+
+_example_: 
+[source,python]
+-----------------
+import flet as ft
+from fletmint import *
+
+def main(page: ft.Page):
+    page.theme_mode = ft.ThemeMode.DARK
+    page.bgcolor = "#22242a"
+
+    page.add(
+        TagsInput(max_width=300, max_tags=2)
+    )
+
+ft.app(target=main)
+-----------------
+image:https://github.com/Bbalduzz/fletmint/assets/81587335/d1fd5130-aca5-4603-99e5-4588a3fd964b[alt="not bad.",width=400]
+
+=== `fletmint.*Stepper*`
+The `Stepper` component inherits the `flet.Container`.
+
+===== params
+* `initial_value`: int
+* `suffix`: str 
+
+===== methods
+
+
+_example_: 
+[source,python]
+-----------------
+import flet as ft
+from fletmint import *
+
+def main(page: ft.Page):
+    page.theme_mode = ft.ThemeMode.DARK
+    page.bgcolor = "#22242a"
+
+    page.add(
+        Stepper(initial_value=123, suffix="px")
+    )
+
+ft.app(target=main)
+-----------------
+image:https://github.com/Bbalduzz/fletmint/assets/81587335/e09c7410-1f68-4d55-a48b-c0e6f9288ea6[alt="not bad.",height=150]
+
+
+=== `fletmint.*TabSwitch*`
+The `TabSwitch` component inherits the `flet.Container`.
+
+===== params
+* `tab_labels`: list
+* `initial_value`: 0 | 1
+* `theme`: ThemeMode
+
+===== methods
+* `on_switch`: return the selected label
+
+
+_example_: 
+[source,python]
+-----------------
+import flet as ft
+from fletmint import *
+
+def main(page: ft.Page):
+    page.theme_mode = ft.ThemeMode.DARK
+    page.bgcolor = "#22242a"
+
+    page.add(
+        TabSwitch(
+            ["Label", "Label", "Label"],
+            on_switch=lambda value: print(f"Switched to tab {value}"),
+        )
+    )
+
+ft.app(target=main)
+-----------------
+image:https://github.com/Bbalduzz/fletmint/assets/81587335/b3a69719-8306-4525-bed8-ca9367800f6e[alt="not bad.",height=150]
+
+
+=== `fletmint.*Dropdown*`
+The `Dropdown` component inherits the `flet.Container`.
+
+===== params
+* `controls`: list = could be both plain strings or other flet components
+* `dropdown_icons`: list[ft.icons]
+* `max_width`: int
+* `theme`: ThemeMode
+
+
+===== methods
+* `on_select`: return the selected control
+
+
+_example_: 
+[source,python]
+-----------------
+import flet as ft
+from fletmint import *
+
+def main(page: ft.Page):
+    page.theme_mode = ft.ThemeMode.DARK
+    page.bgcolor = "#22242a"
+
+    page.add(
+        Dropdown(
+            max_width=250,
+            controls=[
+                "figma",
+                "sketch",
+                "invision studio",
+                "framer",
+                "adobe xd",
+            ],
+            on_select=lambda e: print(f"Selected: {e}"),
+        )
+    )
+
+ft.app(target=main)
+-----------------
+image:https://github.com/Bbalduzz/fletmint/assets/81587335/4fae1089-75e4-49cf-a575-f9d2f2e64d27[alt="not bad.",height=300]
+
+=== `fletmint.*DatePicker*`
+The `DatePicker` component inherits the `flet.UserControl`.
+
+===== params
+* `is_dropdown`: bool = if the calendar is dropdown (default `False`)
+* `left_content`: Any = set the left content of the calendars' footer
+* `multi_select_mode`: bool = if the user can select multiple dates (default `True`)
+* `dropdown_icons`: list[ft.icons]
+* `max_width`: int = set the width of the dropdown
+
+===== methods
+* `on_date_choosen`: return the selected date/dates as a `datetime` object. Here you can specify the date string formatting ex. `"%Y-%m-%d"`, `"%d/%m/%Y"` etc..
+* `on_cancel`: return nothing, if datepicker is in dropdown mode it closes it
+
+
+_example_: 
+[source,python]
+-----------------
+import flet as ft
+from fletmint import *
+
+def main(page: ft.Page):
+    page.theme_mode = ft.ThemeMode.DARK
+    page.bgcolor = "#22242a"
+
+    page.add(
+        DatePicker(
+            is_dropdown=False,
+            multi_select_mode=True,
+            on_date_choosen=lambda value: print(f"Selected dates: {value}"),
+        )
+    )
+
+ft.app(target=main)
+-----------------
+|==================
+|`is_dropdown=False`|`is_dropdown=True`
+|image:https://github.com/Bbalduzz/fletmint/assets/81587335/ecafb7ad-e132-4ce3-8b5b-0759ee9ff0b6[alt="not bad.",height=300]   | image:https://github.com/Bbalduzz/fletmint/assets/81587335/f0dfd7ea-16d1-4242-b230-2be9e03eea0e[alt="not bad.",height=300]
+|==================
+
+=== `fletmint.*Badge*`
+The `Badge` component inherits the `flet.Container`.
+
+The component offers predefined colors: `BadgeColors`.
+
+* success: `BadgeColors.SUCCESS` (default)
+* warning: `BadgeColors.WARNING`
+* error: `BadgeColors.ERROR`
+
+or you can define custom colors in the `colors` param
+
+===== params
+* `colors`: dict | BadgeColors = the dict must be in the form: `{"bgcolor": "#xxxxxx", "color": "#xxxxxx"}`
+* `badge_text`: str = text inside the badge
+* `icon`: ft.icons = icon on the right of the text
+
+===== methods
+* `on_click`: fires when the badge is clicked (check the `TagsInput` code to see an example)
+
+
+_example_: 
+[source,python]
+-----------------
+import flet as ft
+from fletmint import *
+
+def main(page: ft.Page):
+    page.theme_mode = ft.ThemeMode.DARK
+    page.bgcolor = "#22242a"
+
+    page.add(
+        ft.Row([
+            Badge(
+                badge_text="Success",
+                colors=BadgeColors.WARNING,
+                icon=ft.icons.CLOSE,
+                on_click=lambda e: print("cliked"),
+            ),
+            Badge(
+                badge_text="Warning",
+                colors=BadgeColors.SUCCESS,
+                icon=ft.icons.CLOSE,
+                on_click=lambda e: print("cliked"),
+            ),
+            Badge(
+                badge_text="Error",
+                colors=BadgeColors.ERROR,
+                icon=ft.icons.CLOSE,
+                on_click=lambda e: print("cliked"),
+            )
+        ])
+    )
+
+ft.app(target=main)
+-----------------
+image:https://github.com/Bbalduzz/fletmint/assets/81587335/830ca341-717e-4ece-b155-ff5255dee48d[alt="not bad.",width=400]
+
+
+=== `fletmint.*CheckBox*`
+The `CheckBox` component inherits the `flet.Container`.
+
+===== params
+* `disabled`: bool = checkbox is disabled
+* `label`: str = text of the right of the checkbox 
+* `checked`: bool = checkbox starts checked
+* `size`: int = checkbox size
+* `font_size`: int = set the label font size
+* `theme`: str | ThemeMode = programall set the theme
+
+===== methods
+* `on_click`: fires when the checkbox is clicked
+
+
+_example_: 
+[source,python]
+-----------------
+import flet as ft
+from fletmint import *
+
+def main(page: ft.Page):
+    page.theme_mode = ft.ThemeMode.DARK
+    page.bgcolor = "#22242a"
+
+    page.add(
+        ft.Column(
+            [
+                CheckBox(
+                    disabled=False, label="Label", checked=False, on_click=lambda e: print(e)
+                ),
+                CheckBox(
+                    disabled=False, label="Label", checked=True, on_click=lambda e: print(e)
+                ),
+                CheckBox(
+                    disabled=True, label="Label", checked=False, on_click=lambda e: print(e)
+                ),
+            ]
+        )
+    )
+
+ft.app(target=main)
+-----------------
+image:https://github.com/Bbalduzz/fletmint/assets/81587335/0c785d26-5d26-443a-8545-9504d0c0c77a[alt="not bad.",height=250]
+
+=== `fletmint.*Radio*`
+The `Radio` component inherits the `flet.Radio`.
+
+===== params
+* `value`: str = value of the radio checkbox
+* `label`: str = text of the right of the radio 
+
+===== methods
+
+
+_example_: 
+[source,python]
+-----------------
+import flet as ft
+from fletmint import *
+
+def main(page: ft.Page):
+    page.theme_mode = ft.ThemeMode.DARK
+    page.bgcolor = "#22242a"
+
+    page.add(
+        ft.RadioGroup(
+            content=ft.Column(
+                [
+                    Radio(
+                        value="red",
+                        label="Label",
+                    ),
+                    Radio(
+                        value="blue",
+                        label="Label",
+                    ),
+                    Radio(
+                        value="green",
+                        label="Label",
+                    ),
+                ]
+            )
+        )
+    )
+
+ft.app(target=main)
+-----------------
+image:https://github.com/Bbalduzz/fletmint/assets/81587335/d1406e2f-2802-4df6-b7e1-74c4e30bcb2e[alt="not bad.",height=250]
+
+=== `fletmint.*ToggleSwitch*`
+The `ToggleSwitch` component inherits the `flet.Container`.
+
+===== params
+
+===== methods
+* `on_switch`: fires when the switch is clicked
+
+
+_example_: 
+[source,python]
+-----------------
+import flet as ft
+from fletmint import *
+
+def main(page: ft.Page):
+    page.theme_mode = ft.ThemeMode.DARK
+    page.bgcolor = "#22242a"
+
+    page.add(
+        ToggleSwitch(on_switch=change_theme)
+    )
+
+ft.app(target=main)
+-----------------
+image:https://github.com/Bbalduzz/fletmint/assets/81587335/cb5f9053-e906-48f2-ae1d-e42c4fe6a9b5[alt="not bad.",height=150]
+
+=== `fletmint.*Slider*`
+The `Slider` component inherits the `flet.Slider`.
+
+===== params
+* `theme_mode`: page.theme_mode
+
+===== methods
+* `on_switch`: fires when the switch is clicked
+
+
+_example_: 
+[source,python]
+-----------------
+import flet as ft
+from fletmint import *
+
+def main(page: ft.Page):
+    page.theme_mode = ft.ThemeMode.DARK
+    page.bgcolor = "#22242a"
+
+    page.add(
+        Slider(theme_mode=page.theme_mode)
+    )
+
+ft.app(target=main)
+-----------------
+image:https://github.com/Bbalduzz/fletmint/assets/81587335/577be873-066a-40ba-9f4b-beafd996be40[alt="not bad.",width=250]
+
+=== `fletmint.*Toggle*`
+The `Slider` component inherits the `flet.Slider`.
+
+===== params
+* `label`: page.theme_mode
+* `value`: bool = default value
+* `theme`: ThemeMode
+
+===== methods
+* `on_change`: fires when the toggle is clicked
+
+
+_example_: 
+[source,python]
+-----------------
+import flet as ft
+from fletmint import *
+
+def main(page: ft.Page):
+    page.theme_mode = ft.ThemeMode.DARK
+    page.bgcolor = "#22242a"
+
+    page.add(
+        ft.Column(
+            [
+                Toggle(label="Light", value=False, on_change=lambda e: print(e)),
+                Toggle(label="Dark", on_change=lambda e: print(e)),
+            ]
+        )
+    )
+
+ft.app(target=main)
+-----------------
+image:https://github.com/Bbalduzz/fletmint/assets/81587335/d71fcec6-7a05-48c7-a0ca-df7176b7d49d[alt="not bad.",width=250]
+
+=== `fletmint.*UserProfile*`
+The `UserProfile` component inherits the `flet.Container`.
+
+The component offers predefined profile statuses: `ProfileStatus`.
+
+* private: `ProfileStatus.PRIVATE` (default)
+* public: `ProfileStatus.OPEN`
+
+===== params
+* `username`: str = username shown in the profile
+* `avatar_foreground_img`: str = profile photo, local or url 
+* `status`: ProfileStatus
+
+===== methods
+
+
+_example_: 
+[source,python]
+-----------------
+import flet as ft
+from fletmint import *
+
+def main(page: ft.Page):
+    page.theme_mode = ft.ThemeMode.DARK
+    page.bgcolor = "#22242a"
+
+    page.add(
+        UserProfile(
+            username="Edoardo B.",
+            avatar_foreground_img="https://fiverr-res.cloudinary.com/image/upload/t_profile_original,q_auto,f_auto/v1/attachments/profile/photo/e6ee5c5f29487a42edba6bd2914fee74-1707225777335/002e6712-84fc-4d83-9b26-e5fd2f26739a.jpg",
+            status=ProfileStatus.PRIVATE,
+        )
+    )
+
+ft.app(target=main)
+-----------------
+image:https://github.com/Bbalduzz/fletmint/assets/81587335/2accab4d-5faf-4952-9bde-72a5bf34bdb7[alt="not bad.",width=250]
+
+=== `fletmint.*Carousel*`
+The `Carousel` component inherits the `flet.UserControl`.
+
+===== params
+* `images_list`: list[tuple] = list of images with their descriptions
+* `animations`: list = animations, _IN_ and _OUT_
+* `compact`: bool = determine the type of the image carousel
+* `descriptive`: bool = show descriptions of the images
+* `transform_factor`: float = image carousel scale factor (to resize it)
+
+===== methods
+
+
+_example_: 
+[source,python]
+-----------------
+import flet as ft
+from fletmint import *
+
+def main(page: ft.Page):
+    page.theme_mode = ft.ThemeMode.DARK
+    page.bgcolor = "#22242a"
+
+    page.add(
+        Carousel(
+            images_list=[
+                (
+                    "https://images.unsplash.com/photo-1714891203404-b25f32706e0a?q=80&w=2370&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                    "image description 1",
+                ),
+                (
+                    "https://images.unsplash.com/photo-1714837291207-4985c06c9a60?q=80&w=2371&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                    "image description 2",
+                ),
+                (
+                    "https://images.unsplash.com/photo-1715109429876-e00fbe6c4ae3?q=80&w=2370&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                    "image description 3",
+                ),
+                (
+                    "https://plus.unsplash.com/premium_photo-1714115035000-023149febb01?q=80&w=2370&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                    "image description 4",
+                ),
+                (
+                    "https://images.unsplash.com/photo-1714836992953-b8f7b4dc8afc?q=80&w=2371&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                    "image description 5",
+                ),
+            ],
+            animations=[ft.AnimationCurve.EASE_IN, ft.AnimationCurve.EASE_IN_OUT_CUBIC_EMPHASIZED],
+            compact=False,
+            descriptive=False,
+            transform_factor=0.5,
+        )
+    )
+
+ft.app(target=main)
+-----------------
+|==================
+|`compact=False`|`is_dropdown=True`
+|image:https://github.com/Bbalduzz/fletmint/assets/81587335/9f533344-d638-4c0d-8cc4-599d876d14c9[alt="not bad.",width=450]   | image:https://github.com/Bbalduzz/fletmint/assets/81587335/eb15e370-b8f0-40f3-b168-bfe0bd77b1fd[alt="not bad.",width=400]
+|==================
+
+=== `fletmint.*AudioPlayer*`
+The `AudioPlayer` component inherits the `flet.Container`.
+
+The component offers predefined profile statuses: `ProfileStatus`.
+
+* private: `ProfileStatus.PRIVATE` (default)
+* public: `ProfileStatus.OPEN`
+
+===== params
+* `username`: str = username shown in the profile
+* `avatar_foreground_img`: str = profile photo, local or url 
+* `status`: ProfileStatus
+
+===== methods
+
+
+_example_: 
+[source,python]
+-----------------
+import flet as ft
+from fletmint import *
+
+def main(page: ft.Page):
+    page.theme_mode = ft.ThemeMode.DARK
+    page.bgcolor = "#22242a"
+
+    page.add(
+        audio_player := AudioPlayer(
+            url="https://github.com/mdn/webaudio-examples/blob/main/audio-analyser/viper.mp3?raw=true"
+        )
+    )
+    page.overlay.append(audio_player.audio)
+
+ft.app(target=main)
+-----------------
+image:https://github.com/Bbalduzz/fletmint/assets/81587335/554d94f6-1702-402c-9994-ea7bd8256a70[alt="not bad.",width=450]
+
+
+=== `fletmint.*VideoPlayer*`
+The `AudioPlayer` component inherits the `flet.Container`.
+
+The component offers predefined profile statuses: `ProfileStatus`.
+
+* private: `ProfileStatus.PRIVATE` (default)
+* public: `ProfileStatus.OPEN`
+
+===== params
+* `playlist`: list[ft.VideoMedia] = set `VideoPlayer` video sources
+* `player_title`: str = player title
+
+===== methods
+
+
+_example_: 
+[source,python]
+-----------------
+import flet as ft
+from fletmint import *
+
+def main(page: ft.Page):
+    page.theme_mode = ft.ThemeMode.DARK
+    page.bgcolor = "#22242a"
+
+    page.add(
+        VideoPlayer(
+            playlist=[
+                ft.VideoMedia(
+                    "https://user-images.githubusercontent.com/28951144/229373720-14d69157-1a56-4a78-a2f4-d7a134d7c3e9.mp4"
+                ),
+                ft.VideoMedia(
+                    "https://user-images.githubusercontent.com/28951144/229373718-86ce5e1d-d195-45d5-baa6-ef94041d0b90.mp4"
+                ),
+                ft.VideoMedia(
+                    "https://user-images.githubusercontent.com/28951144/229373716-76da0a4e-225a-44e4-9ee7-3e9006dbc3e3.mp4"
+                ),
+            ],
+            player_title="Demo video by Bbalduzz",
+        )
+    )
+
+ft.app(target=main)
+-----------------
+image:https://github.com/Bbalduzz/fletmint/assets/81587335/d6dedf70-d79f-45a0-9141-b5f961f0ff4a[alt="not bad.",width=450]
+
+
+= Support
+link:https://www.patreon.com/edoardobalducci[ image:https://pbs.twimg.com/media/DC4gjLRUMAAyQ92.jpg[Donate, align="center", width=180]]
+
+link:https://liberapay.com/balduzz/donate[image:https://liberapay.com/assets/widgets/donate.svg[Donate, align="center"]]
+
+link:https://www.paypal.com/donate/?hosted_button_id=3C8G7V8DUWLQG[image:https://cwc-berkeley.org/wp-content/uploads/2017/11/btn-donation-paypal-2x-167.png[PayPal, align="center", width=150]]
+
+link:https://ko-fi.com/C0C8T2OJ6[image:https://ko-fi.com/img/githubbutton_sm.svg[Ko-fi, align="center"]]

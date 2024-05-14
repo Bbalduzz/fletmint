@@ -1,0 +1,8 @@
+/build
+/dist
+/dev
+/fletmint.egg-info
+/Dockerfile
+/fly.toml
+/requirements.txt
+/description.md
