@@ -15,3 +15,5 @@ from .audioplayer import AudioPlayer
 from .videoplayer import VideoPlayer
 from .badge import Badge, BadgeColors
 from .carousel import Carousel
+
+from .code import Code, CodeTheme

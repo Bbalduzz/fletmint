@@ -4,5 +4,6 @@
 /fletmint.egg-info
 /Dockerfile
 /fly.toml
+/single.py
 /requirements.txt
 /description.md

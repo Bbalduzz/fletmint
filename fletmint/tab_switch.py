@@ -88,23 +88,28 @@ class TabSwitch(ft.Container):
         )
 
     def toggle_switch(self, e):
-        """Switch to the tab that was clicked."""
-        clicked_tab_index = self.content.controls.index(e.control)
-        self.value = clicked_tab_index
+        """Switch to the tab that was clicked and update its appearance."""
+        new_active_index = self.content.controls.index(e.control)
+        if new_active_index != self.value:
+            self.update_tab(self.tabs[self.value], False)
+            self.update_tab(self.tabs[new_active_index], True)
+            self.value = new_active_index
+            if self.on_switch:
+                self.on_switch(self.value)
 
-        # Update the tabs to reflect the active state
-        self.content.controls = [
-            self.get_container(label, index == self.value)
-            for index, label in enumerate(self.tab_labels)
-        ]
-
-        self.update()
-        if self.on_switch:
-            self.on_switch(self.value)
-
-    def get_value(self):
-        """Return the current active tab index."""
-        return self.value
+    def update_tab(self, tab, active):
+        """Update the visual state of a tab."""
+        tab.bgcolor = (
+            self.colors.active_tab_background_color
+            if active
+            else self.colors.container_background_color
+        )
+        tab.content.color = (
+            self.colors.label_text_color
+            if active
+            else self.colors.unfocused_label_text_color
+        )
+        tab.update()
 
     def did_mount(self):
         self.colors = (

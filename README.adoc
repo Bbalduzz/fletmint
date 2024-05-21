@@ -742,6 +742,60 @@ ft.app(target=main)
 image:https://github.com/Bbalduzz/fletmint/assets/81587335/d6dedf70-d79f-45a0-9141-b5f961f0ff4a[alt="not bad.",width=450]
 
 
+=== `fletmint.*Code*`
+The `Code` component inherits the `flet.UserControl`.
+
+The component offers predefined code editor themes: `CodeTheme`. As of now it's supported:
+
+* *Ayu*: 
+    - dark mode: `CodeTheme.AYU_DARK`
+    - light mode: `CodeTheme.AYU_LIGHT`
+* *Github*: 
+    - dark mode: `CodeTheme.GITHUB_DARK` (default)
+* *One Dark Pro*: 
+    - dark mode: `CodeTheme.ONE_DARK_PRO`
+
+===== params
+* `language`: str = set the code editor language's syntax rules
+* `code`: str = code to show
+* `font`: str = editor's font (_ttf_), can be online url, local path or page font
+* `theme`: CodeTheme = editor's theme
+* `read_only`: bool = enables edit mode (_default_: _False_)
+* `height`: int = editor's height
+
+===== methods
+
+
+_example_: 
+[source,python]
+-----------------
+import flet as ft
+from fletmint import *
+
+
+def main(page: ft.Page):
+    page.fonts = {
+        "JetBrainsMono": "C:\\path\\to\\font\\JetBrainsMono-Regular.ttf",
+        "SourceCodePro": "/path/to/font/SourceCodePro.ttf",
+    }
+    page.theme_mode = ft.ThemeMode.DARK
+    code_editor = Code(
+        # code=initial_code,
+        language="python",
+        font="https://github.com/JetBrains/JetBrainsMono/raw/master/fonts/ttf/JetBrainsMono-Regular.ttf'",
+        height=800,
+        theme=CodeTheme.ONE_DARK_PRO,
+        read_only=False,
+    )
+    page.add(code_editor)
+
+
+ft.app(target=main)
+-----------------
+image:https://github.com/Bbalduzz/fletmint/assets/81587335/a56a0ee0-f0c1-4d74-bb0a-baa1a5bbebe4[alt="not bad.",width=450]
+
+
+
 = Support
 _Maintaining_ and _updating_ this kit, along with _adding new components_, is a *time-consuming* and often *challenging* process. However, I believe it's important to make this resource available to everyone because it's the right thing to do. If you find value in this components library and would like to *_support its development_*, please consider contributing in any way you can.
 

@@ -26,6 +26,7 @@ class Button(TextButton):
         height=50,
         on_click=None,
         disabled=False,
+        style=None,
         label="Button",
         icon=None,
     ):
@@ -38,21 +39,24 @@ class Button(TextButton):
                 label, size=13, color=ButtonColors.button_content_color
             )
 
-        self.style = ButtonStyle(
-            color={
-                "": ButtonColors.button_disabled_content_color
-                if disabled
-                else ButtonColors.button_content_color,  # MaterialState.DEFAULT
-            },
-            bgcolor={
-                "": ButtonColors.button_backgound_color
-                if not disabled
-                else ButtonColors.button_disabled_background_color,
-                "disabled": ButtonColors.button_disabled_background_color,
-            },
-            padding=18,
-            shape=ContinuousRectangleBorder(radius=20),
-        )
+        if not style:
+            self.style = ButtonStyle(
+                color={
+                    "": ButtonColors.button_disabled_content_color
+                    if disabled
+                    else ButtonColors.button_content_color,  # MaterialState.DEFAULT
+                },
+                bgcolor={
+                    "": ButtonColors.button_backgound_color
+                    if not disabled
+                    else ButtonColors.button_disabled_background_color,
+                    "disabled": ButtonColors.button_disabled_background_color,
+                },
+                padding=18,
+                shape=ContinuousRectangleBorder(radius=20),
+            )
+        else:
+            self.style = style
 
         super().__init__(
             content=Container(content=button_content),

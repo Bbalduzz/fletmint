@@ -3,6 +3,10 @@ from fletmint import *
 
 
 def main(page: ft.Page):
+    page.fonts = {
+        "JetBrainsMono": "C:\\Users\\edoar\\Documents\\work\\fletmint_dev\\dev\\JetBrainsMono-Regular.ttf",
+        "SourceCodePro": "/Users/edoardo/Projects/flet-lucide/SourceCodePro.ttf",
+    }
     page.window_width = 1680
     page.window_height = 850
     page.padding = 50
@@ -123,6 +127,7 @@ def main(page: ft.Page):
 
     calendar_dropdown = DatePicker(
         is_dropdown=True,
+        show_today=False,
         multi_select_mode=True,
         left_content=ft.TextButton(
             text="Share Dates",
@@ -134,6 +139,7 @@ def main(page: ft.Page):
     )
     calendar = DatePicker(
         is_dropdown=False,
+        show_today=True,
         multi_select_mode=False,
         on_date_choosen=lambda values: print(
             f"Selected dates: {[value.strftime('%d-%m-%y') for value in values]}"
@@ -160,7 +166,7 @@ def main(page: ft.Page):
     )
 
     audio_player = AudioPlayer(
-        url="https://github.com/mdn/webaudio-examples/blob/main/audio-analyser/viper.mp3?raw=true"
+        url="https://dn720301.ca.archive.org/0/items/the-concert-for-george-harrison/Concert%20for%20George%20Disc%202%2F17%20While%20My%20Guitar%20Gently%20Weeps.mp3"
     )
     page.overlay.append(audio_player.audio)
 
@@ -206,6 +212,14 @@ def main(page: ft.Page):
         compact=False,
         descriptive=False,
         transform_factor=0.5,
+    )
+
+    code_editor = Code(
+        language="python",
+        # font="https://github.com/adobe-fonts/source-code-pro/raw/release/TTF/SourceCodePro-Regular.ttf",
+        height=800,
+        theme=CodeTheme.AYU_DARK,
+        read_only=False,
     )
 
     page.add(
@@ -345,6 +359,16 @@ def main(page: ft.Page):
                 ),
             ],
             spacing=30,
+        ),
+        ft.Row(
+            [
+                ft.Column(
+                    [
+                        ft.Text("Code Editor", color=ft.colors.GREY_600),
+                        code_editor,
+                    ]
+                ),
+            ]
         ),
     )
     tag_text = "Bbalduzz"

@@ -11,6 +11,8 @@ class DatePickerColors:
     container_background_color: str
     container_border_color: str
     weekday_color: str
+    selected_date_background_color: str
+    today_button_border_color: str
     today_button_background_color: str
     default_day_background_color: str
     today_text_color: str
@@ -24,7 +26,9 @@ class DatePickerColors:
             container_background_color="#323741",
             container_border_color="#3d424d",
             weekday_color="#4a505b",
-            today_button_background_color="#1f5eff",
+            selected_date_background_color="#1f5eff",
+            today_button_border_color="#325de3",
+            today_button_background_color="#314276",
             default_day_background_color="#3c414a",
             today_text_color="#ffffff",
             filler_day_text_color="#4a505b",
@@ -38,6 +42,8 @@ class DatePickerColors:
             container_background_color="#ffffff",
             container_border_color="#e0e4ed",
             weekday_color="#EBEBEB",
+            selected_date_background_color="#1f5eff",
+            today_button_border_color="#1f5eff",
             today_button_background_color="#1f5eff",
             default_day_background_color="#EBF1FF",
             today_text_color="#ffffff",
@@ -55,6 +61,7 @@ class DatePicker(ft.UserControl):
         max_width=300,
         is_dropdown=True,
         multi_select_mode=True,
+        show_today=True,
         on_date_choosen=None,
         on_cancel=None,
         theme: ft.ThemeMode | str = ft.ThemeMode.DARK,
@@ -69,6 +76,7 @@ class DatePicker(ft.UserControl):
         self.left_content = left_content
         self.max_width = max_width
         self.is_dropdown = is_dropdown
+        self.show_today = show_today
         self.on_date_choosen = on_date_choosen
         self.on_cancel = on_cancel
         self.multi_select_mode = multi_select_mode
@@ -166,11 +174,14 @@ class DatePicker(ft.UserControl):
 
         for i in range(1, days_in_month + 1):
             day = datetime(self.current_year, self.current_month, i)
-            is_today = (
-                self.current_month == self.today.month
-                and self.current_year == self.today.year
-                and i == self.today.day
-            )
+            if not self.show_today:
+                is_today = False
+            else:
+                is_today = (
+                    self.current_month == self.today.month
+                    and self.current_year == self.today.year
+                    and i == self.today.day
+                )
             button = self.create_day_button(str(i), is_today=is_today, day_date=day)
             grid.controls.append(button)
 
@@ -188,6 +199,13 @@ class DatePicker(ft.UserControl):
             if is_filler
             else self.colors.default_day_background_color
         )
+        bordercolor = (
+            self.colors.today_button_border_color
+            if is_today
+            else ft.colors.with_opacity(0, "white")
+            if is_filler
+            else self.colors.default_day_background_color
+        )
         button = ft.TextButton(
             text=text,
             width=50,
@@ -196,6 +214,7 @@ class DatePicker(ft.UserControl):
             on_click=self.select_day,
             style=ft.ButtonStyle(
                 bgcolor=bgcolor,
+                side=ft.BorderSide(1, bordercolor),
                 color=self.colors.today_text_color
                 if is_today
                 else self.colors.filler_day_text_color
@@ -222,7 +241,7 @@ class DatePicker(ft.UserControl):
                 day_button.style.color = self.colors.default_day_text_color
             else:
                 self.selected_dates.add(day_date)
-                day_button.style.bgcolor = self.colors.today_button_background_color
+                day_button.style.bgcolor = self.colors.selected_date_background_color
                 day_button.style.color = self.colors.today_text_color
         else:
             for button in self.calendarpicker.content.controls[1].controls:
@@ -236,7 +255,7 @@ class DatePicker(ft.UserControl):
 
             self.selected_dates.clear()
             self.selected_dates.add(day_date)
-            day_button.style.bgcolor = self.colors.today_button_background_color
+            day_button.style.bgcolor = self.colors.selected_date_background_color
             day_button.style.color = self.colors.today_text_color
 
         day_button.update()
