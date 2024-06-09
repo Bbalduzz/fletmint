@@ -15,5 +15,7 @@ from .audioplayer import AudioPlayer
 from .videoplayer import VideoPlayer
 from .badge import Badge, BadgeColors
 from .carousel import Carousel
+from .color_picker import ColorPicker
+from .toast import Toaster, Toast, ToastType, ToastPosition
 
 from .code import Code, CodeTheme

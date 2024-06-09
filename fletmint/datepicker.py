@@ -3,7 +3,7 @@ from .text_input import TextInput
 from .button import Button, SecondaryButton
 from datetime import datetime, timedelta, timezone
 from dataclasses import dataclass
-import locale
+import locale, time
 
 
 @dataclass
@@ -62,6 +62,7 @@ class DatePicker(ft.UserControl):
         is_dropdown=True,
         multi_select_mode=True,
         show_today=True,
+        animated=False,
         on_date_choosen=None,
         on_cancel=None,
         theme: ft.ThemeMode | str = ft.ThemeMode.DARK,
@@ -80,6 +81,7 @@ class DatePicker(ft.UserControl):
         self.on_date_choosen = on_date_choosen
         self.on_cancel = on_cancel
         self.multi_select_mode = multi_select_mode
+        self.animated = animated
         self.dropdown_icons = drodown_icons
         self.selected_dates = set()
         self.current_month = datetime.now(self.tz_info).month
@@ -90,8 +92,37 @@ class DatePicker(ft.UserControl):
             else DatePickerColors.light()
         )
         self.show_splash = False
-        self.dropdown_starter_bounds = None
+        self._dropdown_starter_bounds = None
         self.previous_selected_button = None
+
+    def did_mount(self):
+        self.page.on_scroll = self.on_page_scroll
+        self.page.update()
+
+    def on_page_scroll(self, e):
+        if self.show_splash:
+            if e.event_type == "update":
+                new_position_y = (
+                    self._dropdown_starter_bounds["bottom_left"][1] - e.pixels
+                )
+
+                # Check if the new position is within the viewport
+                if self.is_within_viewport(new_position_y):
+                    self.page.splash = self.update_dropdown_position(
+                        (
+                            self._dropdown_starter_bounds["bottom_left"][0],
+                            new_position_y,
+                        )
+                    )
+                else:
+                    # hide the splash if it is out of viewport
+                    self.page.splash = None
+
+                self.page.update()
+
+    def is_within_viewport(self, y_position):
+        viewport_height = self.page.height
+        return 0 <= y_position <= viewport_height
 
     def __on_selected_date(self, e):
         dates = [date.strftime("%Y-%m-%d") for date in self.selected_dates]
@@ -100,6 +131,8 @@ class DatePicker(ft.UserControl):
                 0
             ].value = ", ".join(dates)
             self.unfocus_dropdown()
+            if self.animated:
+                self.animate_dropdown(toggle=False)
             self.close_calendar_dropdown()
         if self.on_date_choosen:
             self.on_date_choosen(self.selected_dates)
@@ -260,6 +293,12 @@ class DatePicker(ft.UserControl):
 
         day_button.update()
 
+    def animate_dropdown(self, toggle=False):
+        self.calendarpicker.height = 0 if not toggle else 350
+        self.calendarpicker.opacity = 0 if not toggle else 1
+        self.calendarpicker.update()
+        time.sleep(0.4)
+
     def build_calendarpicker(self):
         def on_control_click(e):
             print(e.control)
@@ -324,6 +363,17 @@ class DatePicker(ft.UserControl):
             ),
         )
 
+        if self.animated:
+            self.calendarpicker.opacity = 0
+            self.calendarpicker.height = 0
+            self.calendarpicker.animate = ft.animation.Animation(
+                duration=400, curve=ft.AnimationCurve.LINEAR_TO_EASE_OUT
+            )
+            self.calendarpicker.animate_opacity = ft.animation.Animation(
+                duration=400, curve=ft.AnimationCurve.LINEAR_TO_EASE_OUT
+            )
+            # self.calendarpicker.update()
+
         return self.calendarpicker
 
     def build_dropdown_calendarpicker(self):
@@ -354,6 +404,8 @@ class DatePicker(ft.UserControl):
 
     def toggle_dropdown(self, e):
         if self.show_splash:
+            if self.animated:
+                self.animate_dropdown(toggle=False)
             self.unfocus_dropdown()
             self.close_calendar_dropdown()
         else:
@@ -371,6 +423,9 @@ class DatePicker(ft.UserControl):
 
         self.dropdown_starter.update()
         self.page.update()
+        if self.animated:
+            time.sleep(0.01)
+            self.animate_dropdown(toggle=True)
 
     def calculate_bounds(self, event, height=50):
         top_left = (event.global_x - event.local_x, event.global_y - event.local_y)

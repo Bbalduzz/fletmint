@@ -10,6 +10,8 @@ from flet import (
     FontWeight,
     border,
     alignment,
+    animation,
+    transform,
     MainAxisAlignment,
 )
 from dataclasses import dataclass
@@ -64,7 +66,7 @@ class CheckBox(UserControl):
         selection_fill: str = "#183588",
         size: int = 25,
         stroke_width: int = 1,
-        animation=None,
+        animation_duration: int = 100,  # Duration of the animation in milliseconds
         checked: bool = False,
         font_size: int = 16,
         on_click=None,
@@ -77,7 +79,7 @@ class CheckBox(UserControl):
         self.label = label
         self.size = size
         self.stroke_width = stroke_width
-        self.animation = animation
+        self.animation_duration = animation_duration
         self.checked = checked
         self.font_size = font_size
         self.pressed = on_click
@@ -131,7 +133,7 @@ class CheckBox(UserControl):
             content = Container()
 
         return Container(
-            animate=self.animation,
+            animate=animation.Animation(self.animation_duration, "easeInOut"),
             width=self.size,
             height=self.size,
             border_radius=7,
@@ -164,6 +166,11 @@ class CheckBox(UserControl):
                 else self.colors.unchecked_border_color,
                 width=self.stroke_width,
             )
+
+            # Apply the scale animation
+            self.check_box.scale = transform.Scale(0.9)  # Shrink
+            self.update()
+            self.check_box.scale = transform.Scale(1.0)  # Enlarge back
             self.update()
 
             if self.pressed and not self.disabled:

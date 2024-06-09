@@ -11,7 +11,8 @@ def main(page: ft.Page):
     page.window_height = 850
     page.padding = 50
     page.theme_mode = ft.ThemeMode.DARK
-    page.scroll = True
+    page.scroll = "always"
+    # page.on_scroll = lambda e: print(f"[BASIC SCROLL EVENT] {e.pixels}")
     page.bgcolor = "#22242a"
 
     def checkbox_changed(e):
@@ -38,7 +39,54 @@ def main(page: ft.Page):
         )
         e.control.update()
 
-    # == flethoff ==
+    # == fletmint ==
+    toast_manager = Toaster(page, expand=False, position=ToastPosition.TOP_RIGHT)
+
+    def show_action(e):
+        toast = Toast(
+            content=ft.Row(
+                [
+                    ft.Row(
+                        [
+                            ft.Text("This is an custom action"),
+                        ]
+                    ),
+                    ft.TextButton(
+                        content=ft.Text(
+                            "close",
+                            style=ft.TextStyle(
+                                size=13,
+                                weight=ft.FontWeight.W_200,
+                            ),
+                        ),
+                        style=ft.ButtonStyle(
+                            shape=ft.ContinuousRectangleBorder(radius=8),
+                            color=ft.colors.WHITE,
+                            bgcolor=ft.colors.BLACK,
+                        ),
+                        on_click=lambda e: toast_manager.remove_toast(toast),
+                    ),
+                ],
+                alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
+            )
+        )
+        toast_manager.show_toast(toast=toast)
+
+    def show_promise(e):
+        def long_running_task():
+            import time
+
+            time.sleep(5)  # long-running task
+            # raise Exception("Something went wrong")
+            return "long running task output"
+
+        toast_manager.show_promise_toast(
+            long_running_task,
+            success_message="Task Completed Successfully",
+            error_message="Task Failed",
+            descriptive=True,  # shows the function's output as the toast's desctiption
+        )
+
     tab_switch = TabSwitch(
         ["Label", "Label", "Label"],
         on_switch=lambda value: print(f"Switched to tab {value}"),
@@ -80,6 +128,7 @@ def main(page: ft.Page):
     )
     dropdown = Dropdown(
         max_width=250,
+        animated=True,
         controls=[
             "figma",
             "sketch",
@@ -89,6 +138,7 @@ def main(page: ft.Page):
         ],
         on_select=lambda e: print(f"Selected: {e}"),
     )
+
     user_profile = UserProfile(
         username="Edoardo B.",
         avatar_foreground_img="https://fiverr-res.cloudinary.com/image/upload/t_profile_original,q_auto,f_auto/v1/attachments/profile/photo/e6ee5c5f29487a42edba6bd2914fee74-1707225777335/002e6712-84fc-4d83-9b26-e5fd2f26739a.jpg",
@@ -112,10 +162,6 @@ def main(page: ft.Page):
             on_click=show_password,
         ),
     )
-    inputs = ft.Row(
-        [text_input, password_input, tags_input],
-        width=page.window_width,
-    )
     stepper = Stepper(initial_value=123)
     slider = Slider(theme_mode=page.theme_mode)
     toggles = ft.Column(
@@ -127,6 +173,7 @@ def main(page: ft.Page):
 
     calendar_dropdown = DatePicker(
         is_dropdown=True,
+        animated=True,
         show_today=False,
         multi_select_mode=True,
         left_content=ft.TextButton(
@@ -148,13 +195,13 @@ def main(page: ft.Page):
     )
     badge = Badge(
         badge_text="Success",
-        colors=BadgeColors.WARNING,
+        colors=BadgeColors.SUCCESS,
         icon=ft.icons.CLOSE,
         on_click=lambda e: print("cliked"),
     )
     badge2 = Badge(
         badge_text="Warning",
-        colors=BadgeColors.SUCCESS,
+        colors=BadgeColors.WARNING,
         icon=ft.icons.CLOSE,
         on_click=lambda e: print("cliked"),
     )
@@ -210,7 +257,7 @@ def main(page: ft.Page):
         ],
         [ft.AnimationCurve.EASE_IN, ft.AnimationCurve.EASE_IN_OUT_CUBIC_EMPHASIZED],
         compact=False,
-        descriptive=False,
+        descriptive=True,
         transform_factor=0.5,
     )
 
@@ -220,6 +267,10 @@ def main(page: ft.Page):
         height=800,
         theme=CodeTheme.AYU_DARK,
         read_only=False,
+    )
+
+    color_picker = ColorPicker(
+        color="#00ff00", on_color_select=lambda value: print("selected color:", value)
     )
 
     page.add(
@@ -366,7 +417,83 @@ def main(page: ft.Page):
                     [
                         ft.Text("Code Editor", color=ft.colors.GREY_600),
                         code_editor,
-                    ]
+                    ],
+                    alignment=ft.MainAxisAlignment.START,
+                ),
+                ft.Column(
+                    [
+                        ft.Column(
+                            [
+                                ft.Text("Color Picker", color=ft.colors.GREY_600),
+                                color_picker,
+                            ]
+                        ),
+                        ft.Column(
+                            [
+                                ft.Text(
+                                    "Toast notifications", color=ft.colors.GREY_600
+                                ),
+                                SecondaryButton(
+                                    label="Action",
+                                    on_click=show_action,
+                                ),
+                                SecondaryButton(
+                                    label="Info",
+                                    on_click=lambda e: toast_manager.show_toast(
+                                        toast_type=ToastType.INFO,
+                                        text="This is a info message",
+                                    ),
+                                ),
+                                SecondaryButton(
+                                    label="Success",
+                                    on_click=lambda e: toast_manager.show_toast(
+                                        toast_type=ToastType.SUCCESS,
+                                        text="This is a success message",
+                                    ),
+                                ),
+                                SecondaryButton(
+                                    label="Warning",
+                                    on_click=lambda e: toast_manager.show_toast(
+                                        toast_type=ToastType.WARNING,
+                                        text="This is a warning message",
+                                    ),
+                                ),
+                                SecondaryButton(
+                                    label="Error",
+                                    on_click=lambda e: toast_manager.show_toast(
+                                        toast_type=ToastType.ERROR,
+                                        text="This is a error message",
+                                    ),
+                                ),
+                                SecondaryButton(
+                                    label="Promise",
+                                    on_click=show_promise,
+                                ),
+                                ft.TextButton(
+                                    content=ft.Text(
+                                        "Remove latest toast",
+                                        color="#e57373",
+                                        size=13,
+                                        weight=ft.FontWeight.W_200,
+                                    ),
+                                    style=ft.ButtonStyle(
+                                        shape=ft.ContinuousRectangleBorder(radius=10),
+                                        side=ft.BorderSide(color="#5a3b3b", width=1),
+                                        bgcolor="#2a1c1c",
+                                        color={
+                                            ft.MaterialState.HOVERED: "#211717",
+                                            ft.MaterialState.FOCUSED: "#211717",
+                                            ft.MaterialState.DEFAULT: "#211717",
+                                        },
+                                    ),
+                                    on_click=lambda e: toast_manager.remove_toast(
+                                        toast_manager.toasts[0]
+                                    ),
+                                ),
+                            ]
+                        ),
+                    ],
+                    spacing=20,
                 ),
             ]
         ),

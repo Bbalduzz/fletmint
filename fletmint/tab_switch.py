@@ -84,6 +84,9 @@ class TabSwitch(ft.Container):
             border_radius=5,
             alignment=ft.alignment.center,
             padding=ft.padding.all(5),
+            animate=ft.animation.Animation(
+                duration=300, curve=ft.AnimationCurve.DECELERATE
+            ),  # Add animation here
             on_click=self.toggle_switch,
         )
 

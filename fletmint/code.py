@@ -208,12 +208,22 @@ class Code(ft.UserControl):
 
     def did_mount(self):
         if self.ttf_font_regex.match(self.font):
-            print(f"Loading font from: {self.font}")
-            self.page.fonts.update({"custom_font": self.font})
-            self.font = "custom_font"
-            self.code_textfield.text_style.font_family = self.font
-            self.code_textfield.update()
-            self.page.update()
+            max_retries = 3
+            retry_count = 0
+
+            while retry_count < max_retries:
+                try:
+                    self.page.fonts.update({"custom_font": self.font})
+                    self.font = "custom_font"
+                    self.code_textfield.text_style.font_family = self.font
+                    self.code_textfield.update()
+                    self.page.update()
+                    break
+                except Exception as e:
+                    retry_count += 1
+                    print(f"Attempt {retry_count} failed: {e}")
+                    if retry_count == max_retries:
+                        print("Max retries reached. Operation failed.")
 
     def apply_syntax_highlighting(self, text, language):
         rules = self.syntax_rules.get(language, {})

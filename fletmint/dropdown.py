@@ -1,4 +1,5 @@
 import flet as ft
+import time
 from .text_input import TextInput
 from dataclasses import dataclass
 
@@ -39,6 +40,7 @@ class Dropdown(ft.UserControl):
     def __init__(
         self,
         controls,
+        animated=True,
         drodown_icons=[
             ft.icons.ARROW_DROP_DOWN_ROUNDED,
             ft.icons.ARROW_DROP_UP_ROUNDED,
@@ -49,6 +51,7 @@ class Dropdown(ft.UserControl):
         **kwargs,
     ):
         super().__init__(**kwargs)
+        self.animated = animated
         self.show_splash = False
         self.controls = controls
         self.controls_num = len(controls)
@@ -63,13 +66,30 @@ class Dropdown(ft.UserControl):
         self._dropdown_starter_bounds = None
 
     def did_mount(self):
+        self.page.on_scroll = self.on_page_scroll
         self.theme = self.page.theme_mode
-        self.colors = (
-            DropDownColors.dark()
-            if self.theme == ft.ThemeMode.DARK
-            else DropDownColors.light()
-        )
-        self.update()
+        self.page.update()
+
+    def on_page_scroll(self, e):
+        if self.show_splash:
+            if e.event_type == "update":
+                new_position_y = (
+                    self._dropdown_starter_bounds["bottom_left"][1] - e.pixels
+                )
+
+                # Check if the new position is within the viewport
+                if self.is_within_viewport(new_position_y):
+                    self.page.splash = self.update_dropdown_position(
+                        (
+                            self._dropdown_starter_bounds["bottom_left"][0],
+                            new_position_y,
+                        )
+                    )
+                else:
+                    # hide the splash if it is out of viewport
+                    self.page.splash = None
+
+                self.page.update()
 
     def build_controls(self):
         if isinstance(self.controls[0], str):
@@ -98,38 +118,62 @@ class Dropdown(ft.UserControl):
             )
             e.control.update()
 
-        return ft.Container(
-            ft.Column(
-                [
-                    ft.Container(
-                        ft.Container(
-                            control,
-                            width=self.max_width,
-                            height=30,
-                            margin=5,
-                            padding=ft.padding.only(top=3, left=15),
-                        ),
-                        border_radius=8,
-                        on_hover=on_control_hover,
-                        on_click=self.on_control_click,
-                    )
-                    for control in self.build_controls()
-                ],
-                spacing=2,
-            ),
-            padding=10,
-            bgcolor=self.colors.container_background_color,
-            border=ft.border.all(2, self.colors.container_border_color),
-            border_radius=10,
-            width=self.max_width,
-            shadow=ft.BoxShadow(
-                spread_radius=-1,
-                blur_radius=3,
-                color=ft.colors.BLACK,
-                offset=ft.Offset(0, 1),
-                blur_style=ft.ShadowBlurStyle.OUTER,
-            ),
-        )
+        controls = [
+            ft.Container(
+                ft.Container(
+                    control,
+                    width=self.max_width,
+                    height=30,
+                    margin=5,
+                    padding=ft.padding.only(top=3, left=15),
+                ),
+                border_radius=8,
+                on_hover=on_control_hover,
+                on_click=self.on_control_click,
+            )
+            for control in self.build_controls()
+        ]
+
+        if self.animated:
+            self.dropdown = ft.Container(
+                ft.ListView(controls, spacing=2),
+                padding=10,
+                bgcolor=self.colors.container_background_color,
+                border=ft.border.all(2, self.colors.container_border_color),
+                border_radius=10,
+                height=0,
+                opacity=0,
+                animate=ft.animation.Animation(
+                    duration=400, curve=ft.AnimationCurve.LINEAR_TO_EASE_OUT
+                ),
+                animate_opacity=ft.animation.Animation(
+                    duration=400, curve=ft.AnimationCurve.LINEAR_TO_EASE_OUT
+                ),
+                width=self.max_width,
+                shadow=ft.BoxShadow(
+                    spread_radius=-1,
+                    blur_radius=3,
+                    color=ft.colors.BLACK,
+                    offset=ft.Offset(0, 1),
+                    blur_style=ft.ShadowBlurStyle.OUTER,
+                ),
+            )
+        else:
+            self.dropdown = ft.Container(
+                ft.Column(controls, spacing=2),
+                padding=10,
+                bgcolor=self.colors.container_background_color,
+                border=ft.border.all(2, self.colors.container_border_color),
+                border_radius=10,
+                width=self.max_width,
+                shadow=ft.BoxShadow(
+                    spread_radius=-1,
+                    blur_radius=3,
+                    color=ft.colors.BLACK,
+                    offset=ft.Offset(0, 1),
+                    blur_style=ft.ShadowBlurStyle.OUTER,
+                ),
+            )
 
     def on_control_click(self, e):
         self.selected_control_value = e.control.content.content.value
@@ -137,8 +181,9 @@ class Dropdown(ft.UserControl):
             0
         ].value = self.selected_control_value
         self.unfocus_dropdown()
+        if self.animated:
+            self.animate_dropdown(toggle=False)
         self.close_dropdown()
-
         if self._on_select:
             return self._on_select(self.selected_control_value)
 
@@ -165,15 +210,34 @@ class Dropdown(ft.UserControl):
             "bottom_right": (top_left[0] + self.max_width, top_left[1] + float(height)),
         }
 
+    def is_within_viewport(self, y_position):
+        # Assuming the viewport height can be determined, check if the y_position is within viewport
+        viewport_height = self.page.height
+        return 0 <= y_position <= viewport_height
+
     def update_dropdown_position(self, bottom_left):
         dropdown = self.dropdown
         dropdown.top = bottom_left[1] + 20
         dropdown.left = bottom_left[0]
         return dropdown
 
+    def animate_dropdown(self, toggle=False):
+        control_height = 30  # height of each control
+        control_margin = 5  # margin around each control
+        control_spacing = 2  # spacing between controls
+
+        total_controls_height = self.controls_num * (
+            control_height + control_margin + control_spacing
+        )
+        self.dropdown.height = 0 if not toggle else total_controls_height
+        self.dropdown.opacity = 0 if not toggle else 1
+        self.dropdown.update()
+        time.sleep(0.4)
+
     def toggle_dropdown(self, e):
-        # Check if the dropdown is already showing
         if self.show_splash:
+            if self.animated:
+                self.animate_dropdown(toggle=False)
             self.unfocus_dropdown()
             self.close_dropdown()
         else:
@@ -195,12 +259,16 @@ class Dropdown(ft.UserControl):
                 self._dropdown_starter_bounds["bottom_left"]
             )
             self.show_splash = True
+            self.page.update()
+            if self.animated:
+                time.sleep(0.01)
+                self.animate_dropdown(toggle=True)
 
         self.dropdown_starter.update()
         self.page.update()
 
     def build(self):
-        self.dropdown = self.build_dropdown()
+        self.build_dropdown()
         self.dropdown_starter = ft.Container(
             ft.GestureDetector(
                 mouse_cursor=ft.MouseCursor.CLICK,
