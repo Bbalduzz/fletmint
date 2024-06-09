@@ -6,7 +6,7 @@ with open(path.join(path.dirname(__file__), "description.md"), "r") as file:
 
 setup(
     name="fletmint",
-    version="0.1.5",
+    version="0.1.6",
     author="Edoardo Balducci",
     author_email="edoardoba2004@gmail.com",
     description="A sharp and modern components library for Flet",

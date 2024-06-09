@@ -3,9 +3,10 @@
   <img src="https://github.com/Bbalduzz/fletmint/assets/81587335/c9ee557f-4362-432e-9d02-47995bc63585" alt="fletmint logo" width="200"/>
   </br>
   <a href="https://pypi.org/project/fletmint/"><img src="https://static.pepy.tech/badge/fletmint"/></a>
+  <a href="https://badge.fury.io/py/fletmint"><img src="https://badge.fury.io/py/fletmint.svg" alt="PyPI version" height="18"></a>
 </h1>
 
-<h4 align="center">A sharp and modern components library for Flet. Accessible. Customizable. Open Source.</h4>
+<h4 align="center">A sharp and modern components library for Flet.<br>Accessible. Customizable. Open Source.</h4>
 
 <p align="center">
   <a href="#documentation">Documentation</a> •
