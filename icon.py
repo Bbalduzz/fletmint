@@ -19,7 +19,7 @@ def main(page: ft.Page):
     )
 
 
-change_app_icon(icon_path=icon_path)
+change_app_icon(icon_path=icon_path, app_name="Flet App with Custom Icon")
 
 if __name__ == "__main__":
     ft.app(target=main)

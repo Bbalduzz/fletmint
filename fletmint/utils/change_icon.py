@@ -31,6 +31,7 @@ class change_app_icon:
     def __init__(self, icon_path, app_name=None, app_path=None):
         self.image_path = os.path.abspath(icon_path)
         self.icon_path = self.get_icon_path()
+        self.app_name = app_name
         self.app_path = (
             app_path
             if app_path
@@ -38,7 +39,7 @@ class change_app_icon:
                 ".flet",
                 "bin",
                 f"flet-{flet_version}",
-                f"{app_name}.app" if app_name else "Flet.app",
+                f"{app_name}.app" if self.app_name else "Flet.app",
             )
         )
         self._change_app_icon()
@@ -133,7 +134,7 @@ class change_app_icon:
 
         # check for the creation of the flet window before changing the icon
         while True:
-            windows = gw.getWindowsWithTitle("Flet App with Custom Icon")
+            windows = gw.getWindowsWithTitle(self.app_name)
             if windows:
                 perform_change()
                 break
