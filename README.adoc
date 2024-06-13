@@ -661,15 +661,8 @@ ft.app(target=main)
 === `fletmint.*AudioPlayer*`
 The `AudioPlayer` component inherits the `flet.Container`.
 
-The component offers predefined profile statuses: `ProfileStatus`.
-
-* private: `ProfileStatus.PRIVATE` (default)
-* public: `ProfileStatus.OPEN`
-
 ===== params
-* `username`: str = username shown in the profile
-* `avatar_foreground_img`: str = profile photo, local or url 
-* `status`: ProfileStatus
+* `url`: str = audio source
 
 ===== methods
 
@@ -697,12 +690,7 @@ image:https://github.com/Bbalduzz/fletmint/assets/81587335/554d94f6-1702-402c-99
 
 
 === `fletmint.*VideoPlayer*`
-The `AudioPlayer` component inherits the `flet.Container`.
-
-The component offers predefined profile statuses: `ProfileStatus`.
-
-* private: `ProfileStatus.PRIVATE` (default)
-* public: `ProfileStatus.OPEN`
+The `VideoPlayer` component inherits the `flet.Container`.
 
 ===== params
 * `playlist`: list[ft.VideoMedia] = set `VideoPlayer` video sources
@@ -1033,6 +1021,49 @@ toast = Toast(
 -----------------
 image:https://github.com/Bbalduzz/fletmint/assets/81587335/b173b756-a336-4905-bcf4-4306e73d10bb[title="Toasts",width=450]
 
+== Utils
+
+=== `fletmint.utils.*change_app_icon*`
+This utility let the user chnage the app icon on runtime. 
+This utility works on `windows`, `macos`, `linux`, each os laverage its unique methods.
+
+NOTE: When building the app, use the `--icon` flag to set the icon in the build.
+
+===== params
+* `icon_path`: str | Path = path of your custom icon. This can be _png_, _jpeg_, _ico_, _bpm_, _icns_ (any)
+* `app_name`: Optional[str] = (macos only)
+* `app_path`: Optional[str] = (macos only)
+
+
+_example_: 
+[source,python]
+-----------------
+import os
+import flet as ft
+from fletmint.utils import change_app_icon
+
+icon_path = os.path.join("icons", "my_custom_icon.png")
+
+def main(page: ft.Page):
+    page.window_width, page.window_height = 400, 400
+    page.title = "Flet App with Custom Icon"
+    page.vertical_alignment = ft.MainAxisAlignment.CENTER
+    page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
+
+    page.add(
+        ft.Image(src=icon_path, width=64, height=64),
+        ft.Text("Hello, this is a Flet app with a custom icon!"),
+    )
+
+
+change_app_icon(icon_path=icon_path)
+
+ft.app(target=main)
+-----------------
+|==================
+|`macos`|`windows` | `linux`
+|image:https://github.com/Bbalduzz/fletmint/assets/81587335/cced79a2-256c-405d-a8ce-55be728aecc9[alt="not bad.",width=400]   | image:https://github.com/Bbalduzz/fletmint/assets/81587335/fee9d862-1338-4543-b224-515f008b43b7[alt="not bad.",height=300]   | not tested
+|==================
 
 
 = Support

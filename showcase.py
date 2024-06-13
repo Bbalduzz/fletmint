@@ -1,6 +1,8 @@
 import flet as ft
 from fletmint import *
 
+# from fletmint.utils import change_app_icons
+
 
 def main(page: ft.Page):
     page.fonts = {
@@ -502,5 +504,7 @@ def main(page: ft.Page):
     tag_colors = {"bgcolor": "#5b4e42", "color": "#c28845"}
     tags_input.create_tag(tag_text, tag_colors)
 
+
+change_app_icon()
 
 ft.app(target=main)
