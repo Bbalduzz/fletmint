@@ -1,6 +1,6 @@
 ++++
 <h1 align="center">
-  <img src="https://github.com/Bbalduzz/fletmint/assets/81587335/c9ee557f-4362-432e-9d02-47995bc63585" alt="fletmint logo" width="200"/>
+  <img src="https://github.com/user-attachments/assets/0895932f-039f-4039-a137-aa634b7da6cc" alt="fletmint logo" width="200"/>
   </br>
   <a href="https://pypi.org/project/fletmint/"><img src="https://static.pepy.tech/badge/fletmint"/></a>
   <a href="https://badge.fury.io/py/fletmint"><img src="https://badge.fury.io/py/fletmint.svg" alt="PyPI version" height="18"></a>
@@ -30,6 +30,7 @@ pip install fletmint
 +
 ```
 git clone https://github.com/Bbalduzz/fletmint.git
+
 
 cd fletmint
 
